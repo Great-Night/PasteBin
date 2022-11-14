@@ -1,9 +1,10 @@
 from contextlib import suppress
 from dataclasses import dataclass
+import atexit
 
 from aiohttp import ClientSession, ClientResponse
 from bs4 import BeautifulSoup
-import atexit
+
 
 
 @dataclass
