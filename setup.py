@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='PasteBin',
-    version='1.1',
+    version='1.1.0',
     packages=[''],
     url='',
     license='',
