@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 from aiohttp import ClientSession, ClientResponse
 from bs4 import BeautifulSoup
+import atexit
 
 
 @dataclass
