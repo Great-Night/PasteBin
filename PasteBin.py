@@ -23,6 +23,7 @@ class expire(str):
         One: str = "31536000"
 
 
+
 class PasteBin:
     def __init__(self, Expire: str = expire.Week.Two, content: str = "", description: str = "", name: str = ""):
         self.status = None
@@ -41,6 +42,10 @@ class PasteBin:
             "jscheck": True,
             "jscheck": True
         }
+        atexit.register(self._shutdown)
+
+    def _shutdown(self):
+        asyncio.run(self.session.close())
 
     async def token(self):
         for meta in BeautifulSoup(await (await self.session.get(self.url)).text(), "lxml").find_all("input"):
