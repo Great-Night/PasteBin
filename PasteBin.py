@@ -1,10 +1,10 @@
+import asyncio
+import atexit
 from contextlib import suppress
 from dataclasses import dataclass
-import atexit
 
 from aiohttp import ClientSession, ClientResponse
 from bs4 import BeautifulSoup
-
 
 
 @dataclass
@@ -25,12 +25,12 @@ class expire(str):
         One: str = "31536000"
 
 
-
 class PasteBin:
     def __init__(self, Expire: str = expire.Week.Two, content: str = "", description: str = "", name: str = ""):
-        self.status = None
+        self.raw = str
+        self.status = int
+        self.url = "https://paste.ee/paste"
         self.request = ClientResponse
-        self.url = "https://paste.ee/"
         self.session = ClientSession(requote_redirect_url=True)
         self.Payload = lambda token: {
             "_token": token,
@@ -55,15 +55,18 @@ class PasteBin:
                 if meta['name'] == "_token": return meta['value']
 
     async def generate(self):
-        self.request = await self.session.post("https://paste.ee/paste",
+        self.request = await self.session.post(self.url,
                                                data=self.Payload(await self.token()))
         assert self.request.status == 200, "Server responded with status code %s" % self.request.status
         self.url = str(self.request.url)
         self.status = self.request.status
-        await self.session.close()
+        self.raw = str(self.url).replace("/p/", "/r/") + "/0"
 
-    async def get_url(self):
+    def url(self):
         return self.url
 
-    async def get_status(self):
+    def status(self):
         return self.status
+
+    def raw(self):
+        return self.raw
